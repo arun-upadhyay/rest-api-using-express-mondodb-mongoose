@@ -1,30 +1,31 @@
 // express
 const express = require('express');
+const cors = require('cors');
+const morgan = require('morgan');
 const app = express();
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
+app.use(cors());
+app.use(morgan("tiny"));
 
-// add mongoose
-var mongoose = require('mongoose');
+//*** Database setup ****
+const mongoose = require('mongoose');
+
 //Set up default mongoose connection
 var connection = mongoose.createConnection('mongodb://127.0.0.1/api_service',
     {useNewUrlParser: true, useUnifiedTopology: true})
 
-var schema = mongoose.Schema;
-
-var Post = new mongoose.Schema({
-    title: {
-        type: String
-    },
-    description: {
-        type: String
-    }
-}, {collection: 'Post'})
-
-var Posts = connection.model('Post', Post);
-
-const port = 3000
+const Posts = connection.model('Post', new mongoose.Schema({
+        title: {
+            type: String
+        },
+        description: {
+            type: String
+        }
+    }, {collection: 'Post'})
+);
+// **** End of database setup ****
 
 app.get('/', (req, res) => res.send(`Supported endpoint = /posts, /posts/:id', methods = GET, PUT, DELETE, POST`))
 
@@ -114,5 +115,5 @@ app.delete('/posts', function (req, res) {
         })
     })
 })
-
+const port = 3000;
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))

@@ -13,24 +13,24 @@ var connection = mongoose.createConnection('mongodb://127.0.0.1/api_service',
 
 var schema = mongoose.Schema;
 
-var todoSchema = new mongoose.Schema({
-    id: {
-        type: Number
+var Post = new mongoose.Schema({
+    title: {
+        type: String
     },
-    type: {
+    description: {
         type: String
     }
-}, {collection: 'todos'})
+}, {collection: 'Post'})
 
-var todos = connection.model('todos', todoSchema);
+var Posts = connection.model('Post', Post);
 
 const port = 3000
 
-app.get('/', (req, res) => res.send(`Supported endpoint = /todos, /todos/:id', methods = GET, PUT, DELETE, POST`))
+app.get('/', (req, res) => res.send(`Supported endpoint = /posts, /posts/:id', methods = GET, PUT, DELETE, POST`))
 
-// get all todos
-app.get('/todos', (req, res) => {
-    todos.find()
+// get all posts
+app.get('/posts', (req, res) => {
+    Posts.find()
         .then(records => {
             res.send(records)
         }).catch(err => {
@@ -42,29 +42,29 @@ app.get('/todos', (req, res) => {
 })
 
 
-app.get('/todos/:id', (req, res) => {
-    todos.findById(req.params.id)
+app.get('/posts/:_id', (req, res) => {
+    Posts.findById(req.params._id)
         .then(record => {
             if (!record) {
                 return res.status(404).send({
-                    message: "Record not found. Invalid _id = ".req.params.id
+                    message: "Record not found. Invalid _id = ".req.params._id
                 })
             }
             return res.send(record);
         }).catch(err => {
         return res.status(500).send({
-            message: `${res.message} occurred while fetching record with _id ` + req.params.id
+            message: `${err.message} occurred while fetching record with _id ` + req.params._id
         })
     })
 })
 
 // saving data
-app.post('/todos', function (req, res) {
-    const newTodo = new todos({
-        'id': req.body.id,
-        'type': req.body.type
+app.post('/posts', function (req, res) {
+    const post = new Posts({
+        'title': req.body.text,
+        'description': req.body.description
     })
-    newTodo.save()
+    post.save()
         .then(record => {
             res.send({
                 message: "Data saved",
@@ -79,11 +79,11 @@ app.post('/todos', function (req, res) {
 })
 
 // update record by Id
-app.put('/todos', function (req, res) {
+app.put('/posts', function (req, res) {
     let _id = req.body._id;
-    todos.findByIdAndUpdate(_id, {
-        id: req.body.id,
-        type: req.body.type
+    Posts.findByIdAndUpdate(_id, {
+        title: req.body.title,
+        description: req.body.description
     }, {useFindAndModify: false})
         .then(record => {
             if (!record) {
@@ -96,9 +96,9 @@ app.put('/todos', function (req, res) {
         })
 })
 
-app.delete('/todos', function (req, res) {
+app.delete('/posts', function (req, res) {
     let _id = req.body._id;
-    todos.findByIdAndRemove(_id, {useFindAndModify: false})
+    Posts.findByIdAndRemove(_id, {useFindAndModify: false})
         .then(record => {
             if (!record) {
                 return res.status(404).send({

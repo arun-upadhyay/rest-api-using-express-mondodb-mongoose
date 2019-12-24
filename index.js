@@ -62,7 +62,7 @@ app.get('/posts/:_id', (req, res) => {
 // saving data
 app.post('/posts', function (req, res) {
     const post = new Posts({
-        'title': req.body.text,
+        'title': req.body.title,
         'description': req.body.description
     })
     post.save()
@@ -76,7 +76,7 @@ app.post('/posts', function (req, res) {
             message: `${err.message} occurred while saving data`
         })
     })
-    res.send("Save successfully :)")
+
 })
 
 // update record by Id
@@ -107,6 +107,7 @@ app.delete('/posts', function (req, res) {
                 })
             }
             return res.send({
+                _id: `${_id}`,
                 message: `Record deleted with _id = ${_id}`
             })
         }).catch((err) => {

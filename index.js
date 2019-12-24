@@ -12,8 +12,13 @@ app.use(morgan("tiny"));
 //*** Database setup ****
 const mongoose = require('mongoose');
 
+var uristring =
+    process.env.MONGOLAB_URI ||
+    process.env.MONGOHQ_URL ||
+    'mongodb://localhost/heroku_cddmrvc8';
+
 //Set up default mongoose connection
-var connection = mongoose.createConnection('mongodb://arunnnet@gmail.com:Jnnx`E=JnGKQWfoQwoJ3@ds249787.mlab.com:49787/heroku_cddmrvc8',
+var connection = mongoose.createConnection(uristring,
     {useNewUrlParser: true, useUnifiedTopology: true})
 
 const Posts = connection.model('Post', new mongoose.Schema({

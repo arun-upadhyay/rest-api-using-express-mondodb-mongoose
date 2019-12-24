@@ -13,7 +13,7 @@ app.use(morgan("tiny"));
 const mongoose = require('mongoose');
 
 //Set up default mongoose connection
-var connection = mongoose.createConnection('mongodb://127.0.0.1/api_service',
+var connection = mongoose.createConnection('mongodb://arunnnet@gmail.com:Jnnx`E=JnGKQWfoQwoJ3@ds249787.mlab.com:49787/heroku_cddmrvc8',
     {useNewUrlParser: true, useUnifiedTopology: true})
 
 const Posts = connection.model('Post', new mongoose.Schema({

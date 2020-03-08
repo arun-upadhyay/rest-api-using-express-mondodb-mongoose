@@ -14,7 +14,6 @@ module.exports = {
                 exp: Math.floor(Date.now() / 1000) + (60 * 60) // expire in 1 hour
             }, JWT_SECRET
         )
-        //return JWT.sign({id: user._id}, JWT_SECRET)
     },
     verifyToken: verifyToken = (token) => {
         JWT.verify(token, JWT_SECRET, (err, user) => {
@@ -24,5 +23,20 @@ module.exports = {
             console.log(user);
             return user;
         })
+    },
+    authenticateToken: function (req, res, next) {
+        const authHeader = req.headers['authorization'];
+        const token = authHeader && authHeader.split(' ')[1];
+        if (token == null) {
+            res.sendStatus(401);
+        }
+        JWT.verify(token, JWT_SECRET, (err, user) => {
+            if (err) {
+                return res.sendStatus(403);
+            }
+            res.user = user;
+            next();
+        })
     }
+
 }

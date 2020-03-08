@@ -1,4 +1,3 @@
-// express
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
@@ -9,6 +8,7 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use(morgan("tiny"));
 
+<<<<<<< HEAD
 //*** Database setup ****
 const mongoose = require('mongoose');
 
@@ -31,76 +31,14 @@ const Posts = connection.model('Post', new mongoose.Schema({
 );
 // **** End of database setup ****
 
+=======
+>>>>>>> 0e432aff179322d08f412f720803b316746fb9e5
 app.get('/', (req, res) => res.send(`Supported endpoint = /posts, /posts/:id', methods = GET, PUT, DELETE, POST`))
 
-// get all posts
-app.get('/posts', (req, res) => {
-    Posts.find()
-        .then(records => {
-            res.send(records)
-        }).catch(err => {
-        res.status(500).send({
-            message: `${err.message} occurred while fetching records`
-        })
-    })
+app.use('/user', require('./routes/user'));
+app.use('/posts', require('./routes/posts'));
 
-})
-
-
-app.get('/posts/:_id', (req, res) => {
-    Posts.findById(req.params._id)
-        .then(record => {
-            if (!record) {
-                return res.status(404).send({
-                    message: "Record not found. Invalid _id = ".req.params._id
-                })
-            }
-            return res.send(record);
-        }).catch(err => {
-        return res.status(500).send({
-            message: `${err.message} occurred while fetching record with _id ` + req.params._id
-        })
-    })
-})
-
-// saving data
-app.post('/posts', function (req, res) {
-    const post = new Posts({
-        'title': req.body.title,
-        'description': req.body.description
-    })
-    post.save()
-        .then(record => {
-            res.send({
-                message: "Data saved",
-                record: record
-            })
-        }).catch(err => {
-        res.send({
-            message: `${err.message} occurred while saving data`
-        })
-    })
-
-})
-
-// update record by Id
-app.put('/posts', function (req, res) {
-    let _id = req.body._id;
-    Posts.findByIdAndUpdate(_id, {
-        title: req.body.title,
-        description: req.body.description
-    }, {useFindAndModify: false})
-        .then(record => {
-            if (!record) {
-                return res.status(404).send({message: `Record not found with _id = ${_id}`})
-            }
-            return res.send({message: `Record updated for _id = ${_id}`})
-        })
-        .catch(err => {
-            return res.status(500).send({message: `${err.message} occurred while updating record with _id = ${_id}`})
-        })
-})
-
+<<<<<<< HEAD
 app.delete('/posts', function (req, res) {
     let _id = req.body._id;
     Posts.findByIdAndRemove(_id, {useFindAndModify: false})
@@ -122,3 +60,7 @@ app.delete('/posts', function (req, res) {
 })
 const port = process.env.PORT ||  3000;
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+=======
+const port = 3001;
+app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+>>>>>>> 0e432aff179322d08f412f720803b316746fb9e5
